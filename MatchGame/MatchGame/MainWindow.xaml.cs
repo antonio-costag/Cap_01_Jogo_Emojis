@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,6 +24,29 @@ namespace MatchGame
         public MainWindow()
         {
             InitializeComponent();
+            SetUpGame();
+        }
+        private void SetUpGame()
+        {
+            List<String> animalEmoji = new List<String>()
+            {
+                "🐷", "🐷",
+                "🦍", "🦍",
+                "🦐", "🦐",
+                "🐈‍", "🐈‍",
+                "🐮", "🐮",
+                "🐸", "🐸",
+                "🐟", "🐟",
+                "🐼", "🐼",
+            };
+            Random random = new Random(); //criando um objeto da classe Random
+            foreach(TextBlock textBlock in mainGrid.Children.OfType<TextBlock>()) //Percorrendo todas as minhas TextBlock
+            {
+                int index = random.Next(0, animalEmoji.Count); //Gera um numero aleatorio entre 0 e o numero de elementos da minha list
+                string nextEmoji = animalEmoji[index];
+                textBlock.Text = nextEmoji;
+                animalEmoji.RemoveAt(index); // Remove o Emoji da lista pra ele não repetir
+            }
         }
     }
 }
