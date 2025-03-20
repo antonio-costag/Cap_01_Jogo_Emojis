@@ -16,16 +16,36 @@ using System.Windows.Shapes;
 
 namespace MatchGame
 {
+    using System.Windows.Threading;
     /// <summary>
     /// Interação lógica para MainWindow.xam
     /// </summary>
     public partial class MainWindow : Window
     {
+        DispatcherTimer timer = new DispatcherTimer();
+        int tenthOfSecondsElapsed;
+        int matchesFound;
         public MainWindow()
         {
             InitializeComponent();
+            
+            timer.Interval = TimeSpan.FromSeconds(.1);
+            timer.Tick += Timer_Tick;
+
             SetUpGame();
         }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            tenthOfSecondsElapsed++;
+            timeTextBlock.Text = (tenthOfSecondsElapsed / 10f).ToString("0.0s");
+            if (matchesFound == 8)
+            {
+                timer.Stop();
+                timeTextBlock.Text = timeTextBlock.Text + " - Play again?";
+            }
+        }
+
         private void SetUpGame()
         {
             List<String> animalEmoji = new List<String>()
@@ -42,11 +62,18 @@ namespace MatchGame
             Random random = new Random(); //criando um objeto da classe Random
             foreach(TextBlock textBlock in mainGrid.Children.OfType<TextBlock>()) //Percorrendo todas as minhas TextBlock
             {
-                int index = random.Next(0, animalEmoji.Count); //Gera um numero aleatorio entre 0 e o numero de elementos da minha list
-                string nextEmoji = animalEmoji[index];
-                textBlock.Text = nextEmoji;
-                animalEmoji.RemoveAt(index); // Remove o Emoji da lista pra ele não repetir
+                if (textBlock.Name != "timeTextBlock") //Ignorando a TextBlock do tempo
+                {
+                    textBlock.Visibility = Visibility.Visible;
+                    int index = random.Next(0, animalEmoji.Count); //Gera um numero aleatorio entre 0 e o numero de elementos da minha list
+                    string nextEmoji = animalEmoji[index];
+                    textBlock.Text = nextEmoji;
+                    animalEmoji.RemoveAt(index); // Remove o Emoji da lista pra ele não repetir
+                }
             }
+            timer.Start(); //iniciando o tempo
+            tenthOfSecondsElapsed = 0; //zerando o relogio
+            matchesFound = 0;//zerando as jogadas
         }
 
         TextBlock lastTextBlockClicked;
@@ -62,6 +89,7 @@ namespace MatchGame
             }
             else if (textBlock.Text == lastTextBlockClicked.Text)
             {
+                matchesFound++;
                 textBlock.Visibility = Visibility.Hidden; //deixa a nova TextBlock invisivel
                 findingMatch = false; //termina o processo e inicia um novo
             }
@@ -69,6 +97,13 @@ namespace MatchGame
             {
                 lastTextBlockClicked.Visibility = Visibility.Visible; //deixa a TextBlock anterior visivel novamente
                 findingMatch = false; //...
+            }
+        }
+        private void TimeTextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (matchesFound == 8)
+            {
+                SetUpGame();
             }
         }
     }
