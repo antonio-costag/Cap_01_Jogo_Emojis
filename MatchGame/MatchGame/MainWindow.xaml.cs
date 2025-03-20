@@ -48,5 +48,28 @@ namespace MatchGame
                 animalEmoji.RemoveAt(index); // Remove o Emoji da lista pra ele não repetir
             }
         }
+
+        TextBlock lastTextBlockClicked;
+        bool findingMatch = false;
+        private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            TextBlock textBlock = sender as TextBlock; //Estou acessando o objeto clicado como uma TextBlock
+            if (findingMatch == false)
+            {
+                textBlock.Visibility = Visibility.Hidden; //deixa essa TextBlock invisivel
+                lastTextBlockClicked = textBlock; //diz que a proxima Textblock tem que ser essa
+                findingMatch = true; //permite o evento continuar
+            }
+            else if (textBlock.Text == lastTextBlockClicked.Text)
+            {
+                textBlock.Visibility = Visibility.Hidden; //deixa a nova TextBlock invisivel
+                findingMatch = false; //termina o processo e inicia um novo
+            }
+            else
+            {
+                lastTextBlockClicked.Visibility = Visibility.Visible; //deixa a TextBlock anterior visivel novamente
+                findingMatch = false; //...
+            }
+        }
     }
 }
