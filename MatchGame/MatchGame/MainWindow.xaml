@@ -19,6 +19,7 @@
             <RowDefinition/>
             <RowDefinition/>
             <RowDefinition/>
+            <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock Grid.Column="0" HorizontalAlignment="Center" Grid.Row="0" Text="?" VerticalAlignment="Center" FontSize="36px" MouseDown="TextBlock_MouseDown"/>
         <TextBlock Grid.Column="1" HorizontalAlignment="Center" Grid.Row="0" Text="?" VerticalAlignment="Center" FontSize="36px" MouseDown="TextBlock_MouseDown"/>
@@ -36,7 +37,8 @@
         <TextBlock Grid.Column="1" HorizontalAlignment="Center" Grid.Row="3" Text="?" VerticalAlignment="Center" FontSize="36px" MouseDown="TextBlock_MouseDown"/>
         <TextBlock Grid.Column="2" HorizontalAlignment="Center" Grid.Row="3" Text="?" VerticalAlignment="Center" FontSize="36px" MouseDown="TextBlock_MouseDown"/>
         <TextBlock Grid.Column="3" HorizontalAlignment="Center" Grid.Row="3" Text="?" VerticalAlignment="Center" FontSize="36px" MouseDown="TextBlock_MouseDown"/>
-        <TextBlock x:Name="timeTextBlock" HorizontalAlignment="Center" Grid.Row="4" TextWrapping="Wrap" Text="Elapsed time" VerticalAlignment="Center" FontSize="36px" Grid.ColumnSpan="4" MouseDown="TimeTextBlock_MouseDown"/>
+        <TextBlock x:Name="betterTextBlock" HorizontalAlignment="Left" Grid.Row="4" TextWrapping="Wrap" Text="Bletter: " VerticalAlignment="Center" FontSize="25px" Grid.ColumnSpan="4" Margin="20,20,0,0"/>
+        <TextBlock x:Name="timeTextBlock" HorizontalAlignment="Center" Grid.Row="5" TextWrapping="Wrap" Text="Elapsed time" VerticalAlignment="Center" FontSize="30px" Grid.ColumnSpan="4" MouseDown="TimeTextBlock_MouseDown"/>
         
     </Grid>
 </Window>

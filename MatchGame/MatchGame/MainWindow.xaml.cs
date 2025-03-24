@@ -25,6 +25,7 @@ namespace MatchGame
         DispatcherTimer timer = new DispatcherTimer();
         int tenthOfSecondsElapsed;
         int matchesFound;
+        int betterTime = 100;
         public MainWindow()
         {
             InitializeComponent();
@@ -39,36 +40,77 @@ namespace MatchGame
         {
             tenthOfSecondsElapsed++;
             timeTextBlock.Text = (tenthOfSecondsElapsed / 10f).ToString("0.0s");
+
             if (matchesFound == 8)
             {
                 timer.Stop();
                 timeTextBlock.Text = timeTextBlock.Text + " - Play again?";
+                UpdateBettlerTime();
+            }
+            else if (tenthOfSecondsElapsed >= 100)
+            {
+                matchesFound = 8;
+                timer.Stop();
+                timeTextBlock.Text = "Game Over - Play again?";
             }
         }
-
+        private void UpdateBettlerTime()
+        {
+            if (tenthOfSecondsElapsed < betterTime)
+            {
+                betterTime = tenthOfSecondsElapsed;
+                betterTextBlock.Text = "Better: " + (betterTime / 10f).ToString() + "s";
+            }
+        }
         private void SetUpGame()
         {
-            List<String> animalEmoji = new List<String>()
+            List<List<String>> animalEmoji = new List<List<String>>()
             {
-                "🐷", "🐷",
-                "🦍", "🦍",
-                "🦐", "🦐",
-                "🐈‍", "🐈‍",
-                "🐮", "🐮",
-                "🐸", "🐸",
-                "🐟", "🐟",
-                "🐼", "🐼",
+                new List<String>{
+                    "🐷", "🐷",
+                    "🦍", "🦍",
+                    "🦐", "🦐",
+                    "🐈‍", "🐈‍",
+                    "🐮", "🐮",
+                    "🐸", "🐸",
+                    "🐟", "🐟",
+                    "🐼", "🐼",
+                },
+                new List<String>
+                {
+                    "🐨", "🐨",
+                    "🦥", "🦥",
+                    "🦈", "🦈",
+                    "🦁", "🦁",
+                    "🦑", "🦑",
+                    "🦔", "🦔",
+                    "🐦‍", "🐦‍",
+                    "🐌", "🐌",
+                },
+                new List<String>
+                {
+                    "🐝", "🐝",
+                    "🦩", "🦩",
+                    "🐔", "🐔",
+                    "🐍", "🐍",
+                    "🐳", "🐳",
+                    "🐘", "🐘",
+                    "🦃", "🦃",
+                    "🐡", "🐡",
+                }
             };
             Random random = new Random(); //criando um objeto da classe Random
+            int indexList = random.Next(0, animalEmoji.Count);
+
             foreach(TextBlock textBlock in mainGrid.Children.OfType<TextBlock>()) //Percorrendo todas as minhas TextBlock
             {
-                if (textBlock.Name != "timeTextBlock") //Ignorando a TextBlock do tempo
+                if (textBlock.Name != "timeTextBlock" && textBlock.Name != "betterTextBlock") //Ignorando a TextBlock do tempo
                 {
                     textBlock.Visibility = Visibility.Visible;
-                    int index = random.Next(0, animalEmoji.Count); //Gera um numero aleatorio entre 0 e o numero de elementos da minha list
-                    string nextEmoji = animalEmoji[index];
+                    int indexEmoji = random.Next(0, animalEmoji[indexList].Count); //Gera um numero aleatorio entre 0 e o numero de elementos da minha list
+                    string nextEmoji = animalEmoji[indexList][indexEmoji];
                     textBlock.Text = nextEmoji;
-                    animalEmoji.RemoveAt(index); // Remove o Emoji da lista pra ele não repetir
+                    animalEmoji[indexList].RemoveAt(indexEmoji); // Remove o Emoji da lista pra ele não repetir
                 }
             }
             timer.Start(); //iniciando o tempo
@@ -81,22 +123,25 @@ namespace MatchGame
         private void TextBlock_MouseDown(object sender, MouseButtonEventArgs e)
         {
             TextBlock textBlock = sender as TextBlock; //Estou acessando o objeto clicado como uma TextBlock
-            if (findingMatch == false)
+            if (timeTextBlock.Text != "Game Over - Play again?")
             {
-                textBlock.Visibility = Visibility.Hidden; //deixa essa TextBlock invisivel
-                lastTextBlockClicked = textBlock; //diz que a proxima Textblock tem que ser essa
-                findingMatch = true; //permite o evento continuar
-            }
-            else if (textBlock.Text == lastTextBlockClicked.Text)
-            {
-                matchesFound++;
-                textBlock.Visibility = Visibility.Hidden; //deixa a nova TextBlock invisivel
-                findingMatch = false; //termina o processo e inicia um novo
-            }
-            else
-            {
-                lastTextBlockClicked.Visibility = Visibility.Visible; //deixa a TextBlock anterior visivel novamente
-                findingMatch = false; //...
+                if (findingMatch == false)
+                {
+                    textBlock.Visibility = Visibility.Hidden; //deixa essa TextBlock invisivel
+                    lastTextBlockClicked = textBlock; //diz que a proxima Textblock tem que ser essa
+                    findingMatch = true; //permite o evento continuar
+                }
+                else if (textBlock.Text == lastTextBlockClicked.Text)
+                {
+                    matchesFound++;
+                    textBlock.Visibility = Visibility.Hidden; //deixa a nova TextBlock invisivel
+                    findingMatch = false; //termina o processo e inicia um novo
+                }
+                else
+                {
+                    lastTextBlockClicked.Visibility = Visibility.Visible; //deixa a TextBlock anterior visivel novamente
+                    findingMatch = false; //...
+                }
             }
         }
         private void TimeTextBlock_MouseDown(object sender, MouseButtonEventArgs e)
